@@ -32,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: mobileBackgroundColor,
         title: TextFormField(
           controller: searchController,
-          decoration: InputDecoration(
+          decoration:const InputDecoration(
             labelText: 'Search for a user',
             border: InputBorder.none,
           ),
@@ -47,7 +47,7 @@ class _SearchScreenState extends State<SearchScreen> {
           },
         ),
       ),
-      body: isShowUsers
+      body:isShowUsers
           ? FutureBuilder(
               future: FirebaseFirestore.instance
                   .collection('user')

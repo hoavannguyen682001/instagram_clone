@@ -52,8 +52,10 @@ class MyApp extends StatelessWidget {
                   mobileScreenLayout: MobileScreenLayout(),
                 );
               } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('${snapshot.error}'),
+                return const Center(
+                  child:  CircularProgressIndicator(
+                    color: primaryColor,
+                  ),
                 );
               }
             }
