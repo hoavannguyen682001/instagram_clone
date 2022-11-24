@@ -27,12 +27,14 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     pageController.dispose();
   }
 
-  void navigationTap(int page){
-    pageController.jumpToPage(page);
+  void navigationTap(int page) {
+    // pageController.jumpToPage(page);
+    pageController.animateToPage(page,
+        duration: Duration(milliseconds: 400), curve: Curves.ease);
   }
 
-  void onPageChanged(int page){
-    setState((){
+  void onPageChanged(int page) {
+    setState(() {
       _page = page;
     });
   }
@@ -50,33 +52,49 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         backgroundColor: mobileBackgroundColor,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: _page == 0? primaryColor: secondaryColor,),
+            icon: Icon(
+              Icons.home,
+              color: _page == 0 ? primaryColor : secondaryColor,
+            ),
             label: '',
             backgroundColor: primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: _page == 1? primaryColor: secondaryColor,),
+            icon: Icon(
+              Icons.search,
+              color: _page == 1 ? primaryColor : secondaryColor,
+            ),
             label: '',
             backgroundColor: primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline, color: _page == 2? primaryColor: secondaryColor,),
+            icon: Icon(
+              Icons.add_circle_outline,
+              color: _page == 2 ? primaryColor : secondaryColor,
+            ),
             label: '',
             backgroundColor: primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_outline, color: _page == 3? primaryColor: secondaryColor,),
+            icon: Icon(
+              Icons.favorite_outline,
+              color: _page == 3 ? primaryColor : secondaryColor,
+            ),
             label: '',
             backgroundColor: primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline, color: _page == 4? primaryColor: secondaryColor,),
+            icon: Icon(
+              Icons.person_outline,
+              color: _page == 4 ? primaryColor : secondaryColor,
+            ),
             label: '',
             backgroundColor: primaryColor,
           ),
         ],
         onTap: navigationTap,
       ),
+
     );
   }
 }
