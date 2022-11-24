@@ -14,9 +14,8 @@ import '../models/user.dart';
 import '../utils/global_variables.dart';
 
 class PostCard extends StatefulWidget {
-  final snap;
   const PostCard({Key? key, this.snap}) : super(key: key);
-
+  final snap;
   @override
   State<PostCard> createState() => _PostCardState();
 }
@@ -28,23 +27,23 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getComments();
+    // getComments();
   }
 
-  void getComments() async {
-    try {
-      QuerySnapshot snap = await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.snap['postId'])
-          .collection('comments')
-          .get();
-      commentLen = snap.docs.length;
-    } on Exception catch (e) {
-      showSnackBar(e.toString(), context);
-    }
-
-    setState(() {});
-  }
+  // void getComments() async {
+  //   try {
+  //     Stream snap = await FirebaseFirestore.instance
+  //         .collection('posts')
+  //         .doc(widget.snap['postId'])
+  //         .collection('comments')
+  //         .snapshots();
+  //     commentLen = await snap.length;
+  //   } on Exception catch (e) {
+  //     showSnackBar(e.toString(), context);
+  //   }
+  //
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +53,10 @@ class _PostCardState extends State<PostCard> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: width > webScreenSize? secondaryColor : mobileBackgroundColor,
+          color: width > webScreenSize ? secondaryColor : mobileBackgroundColor,
         ),
         color: mobileBackgroundColor,
       ),
-
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Column(
         children: [
@@ -275,10 +273,26 @@ class _PostCardState extends State<PostCard> {
                   ),
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 4),
-                    child: Text(
-                      'View all $commentLen comment',
-                      style: TextStyle(color: secondaryColor, fontSize: 16),
-                    ),
+                    child: StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('posts')
+                          .doc(widget.snap['postId'])
+                          .collection('comments')
+                          .snapshots(),
+                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot){
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Text(
+                            '0 Comment',
+                            style: TextStyle(color: secondaryColor, fontSize: 16),
+                          );
+                        }
+                        return Text(
+                          '${snapshot.data!.docs.length} Comment',
+                          style: TextStyle(color: secondaryColor, fontSize: 16),
+                        );
+                      },
+                    )
+
                   ),
                 ),
                 Container(
@@ -287,7 +301,7 @@ class _PostCardState extends State<PostCard> {
                     DateFormat.yMMMd().format(
                       widget.snap['datePublished'].toDate(),
                     ),
-                    style: TextStyle(color: secondaryColor, fontSize: 16),
+                    style: TextStyle(color: secondaryColor, fontSize: 13),
                   ),
                 ),
               ],
