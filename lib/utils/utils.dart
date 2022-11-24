@@ -19,3 +19,14 @@ showSnackBar(String content, BuildContext context) {
     ),
   );
 }
+
+Widget LoadingView(BuildContext context) {
+  const themeColor = Color(0xfff5a623);
+  return Container(
+    color: Colors.white.withOpacity(0.8),
+    child: CircularProgressIndicator(
+      color: themeColor.withOpacity(0.2),
+    ),
+  );
+}
+
