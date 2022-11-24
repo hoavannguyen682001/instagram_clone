@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -98,8 +99,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisCount: screenWidth > webScreenSize ? 3 : 2),
                   itemCount: (snapshot.data! as dynamic).docs.length,
                   itemBuilder: (context, index) {
-                    return Image.network(
-                        (snapshot.data! as dynamic).docs[index]['postUrl']);
+                    return _ImageItem(context, (snapshot.data! as dynamic).docs[index]['postUrl']);
                   },
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 6,
@@ -107,5 +107,22 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             ),
     );
+  }
+  Widget _ImageItem(BuildContext context, String imageUrl){
+    if(imageUrl != null){
+      return Container(
+        child: Material(
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            fit: BoxFit.cover,
+            maxWidthDiskCache: 200,
+            maxHeightDiskCache: 200,
+          ),
+        ),
+      );
+
+    }else{
+      return SizedBox.shrink();
+    }
   }
 }

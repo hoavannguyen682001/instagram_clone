@@ -1,13 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:instagram_clone/models/user.dart' as model;
 import 'package:instagram_clone/resources/auth_methods.dart';
 import 'package:instagram_clone/resources/firestore_methods.dart';
 import 'package:instagram_clone/screens/login_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/utils.dart';
 import 'package:instagram_clone/widgets/follow_button.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   final String uid;
@@ -122,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Row(
                         children: [
                           CircleAvatar(
-                            backgroundImage: NetworkImage(userData['photoUrl']),
+                            backgroundImage: CachedNetworkImageProvider(userData['photoUrl']),
                             backgroundColor: Colors.grey,
                             radius: 40,
                           ),
@@ -222,7 +225,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: CircularProgressIndicator(),
                       );
                     }
-
                     return GridView.builder(
                       shrinkWrap: true,
                       gridDelegate:
@@ -233,12 +235,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               childAspectRatio: 1),
                       itemCount: (snapshot.data! as dynamic).docs.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          child: Image.network(
-                            (snapshot.data! as dynamic).docs[index]['postUrl'],
-                            fit: BoxFit.cover,
-                          ),
-                        );
+                        return _ImageItem(context, (snapshot.data! as dynamic).docs[index]['postUrl']);
+
                       },
                     );
                   },
@@ -269,5 +267,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ],
     );
+  }
+
+  Widget _ImageItem(BuildContext context, String imageUrl){
+    if(imageUrl != null){
+      return Container(
+        child: Material(
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            fit: BoxFit.cover,
+            maxWidthDiskCache: 200,
+            maxHeightDiskCache: 200,
+          ),
+        ),
+      );
+
+    }else{
+      return SizedBox.shrink();
+    }
   }
 }
