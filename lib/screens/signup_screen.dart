@@ -31,6 +31,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
@@ -38,6 +43,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _bioController.dispose();
     _userNameController.dispose();
   }
+
+  // Uint8List convertStringToUint8List(String str) {
+  //   final List<int> codeUnits = str.codeUnits;
+  //   final Uint8List unit8List = Uint8List.fromList(codeUnits);
+  //
+  //   return unit8List;
+  // }
 
   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
@@ -56,7 +68,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         password: _passController.text,
         username: _userNameController.text,
         bio: _bioController.text,
-        file: _image!);
+        file: _image!
+    );
 
     if (res != 'Success') {
       // ignore: use_build_context_synchronously

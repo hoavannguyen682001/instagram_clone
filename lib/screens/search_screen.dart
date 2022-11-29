@@ -33,7 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: mobileBackgroundColor,
         title: TextFormField(
           controller: searchController,
-          decoration:const InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Search for a user',
             border: InputBorder.none,
           ),
@@ -48,12 +48,17 @@ class _SearchScreenState extends State<SearchScreen> {
           },
         ),
       ),
-      body:isShowUsers
+      body: isShowUsers
           ? FutureBuilder(
               future: FirebaseFirestore.instance
                   .collection('user')
-                  .where('username',
-                      isGreaterThanOrEqualTo: searchController.text)
+                  .orderBy('username')
+                  .startAt([searchController.text])
+                  .endAt(
+                      [searchController.text + '\uf8ff'])
+                  // .where('username',
+                  //     isGreaterThanOrEqualTo: searchController.text)
+                  // .where('username', isLessThanOrEqualTo: searchController.text + 'z')
                   .get(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -74,7 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
+                          backgroundImage: CachedNetworkImageProvider(
                               (snapshot.data! as dynamic).docs[index]
                                   ['photoUrl']),
                         ),
@@ -86,42 +91,46 @@ class _SearchScreenState extends State<SearchScreen> {
                 );
               },
             )
-          : FutureBuilder(
-              future: FirebaseFirestore.instance.collection('posts').get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FutureBuilder(
+                future: FirebaseFirestore.instance.collection('posts').get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return MasonryGridView.builder(
+                    gridDelegate:
+                        SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                screenWidth > webScreenSize ? 3 : 2),
+                    itemCount: (snapshot.data! as dynamic).docs.length,
+                    itemBuilder: (context, index) {
+                      return _ImageItem(context,
+                          (snapshot.data! as dynamic).docs[index]['postUrl']);
+                    },
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 6,
                   );
-                }
-                return MasonryGridView.builder(
-                  gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: screenWidth > webScreenSize ? 3 : 2),
-                  itemCount: (snapshot.data! as dynamic).docs.length,
-                  itemBuilder: (context, index) {
-                    return _ImageItem(context, (snapshot.data! as dynamic).docs[index]['postUrl']);
-                  },
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 6,
-                );
-              },
+                },
+              ),
             ),
     );
   }
-  Widget _ImageItem(BuildContext context, String imageUrl){
-    if(imageUrl != null){
+
+  Widget _ImageItem(BuildContext context, String imageUrl) {
+    if (imageUrl != null) {
       return Container(
         child: Material(
           child: CachedNetworkImage(
             imageUrl: imageUrl,
             fit: BoxFit.cover,
-            maxWidthDiskCache: 200,
-            maxHeightDiskCache: 200,
           ),
         ),
       );
-
-    }else{
+    } else {
       return SizedBox.shrink();
     }
   }
