@@ -213,33 +213,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                const Divider(),
-                FutureBuilder(
-                  future: FirebaseFirestore.instance
-                      .collection('posts')
-                      .where('uid', isEqualTo: widget.uid)
-                      .get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 6,
-                              mainAxisSpacing: 6,
-                              childAspectRatio: 1),
-                      itemCount: (snapshot.data! as dynamic).docs.length,
-                      itemBuilder: (context, index) {
-                        return _ImageItem(context, (snapshot.data! as dynamic).docs[index]['postUrl']);
+                const Divider(
+                  height: 20,
+                  thickness: 1,
+                  indent: 5,
+                  endIndent: 5,
+                  color: primaryColor,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('posts')
+                        .where('uid', isEqualTo: widget.uid)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                childAspectRatio: 1),
+                        itemCount: (snapshot.data! as dynamic).docs.length,
+                        itemBuilder: (context, index) {
+                          return _ImageItem(context, (snapshot.data! as dynamic).docs[index]['postUrl']);
 
-                      },
-                    );
-                  },
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -276,8 +285,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: CachedNetworkImage(
             imageUrl: imageUrl,
             fit: BoxFit.cover,
-            maxWidthDiskCache: 200,
-            maxHeightDiskCache: 200,
           ),
         ),
       );
