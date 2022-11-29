@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram_clone/utils/colors.dart';
 
 pickImage(ImageSource source) async {
   final ImagePicker _imagePicker = ImagePicker();
@@ -21,11 +22,12 @@ showSnackBar(String content, BuildContext context) {
 }
 
 Widget LoadingView(BuildContext context) {
-  const themeColor = Color(0xfff5a623);
   return Container(
-    color: Colors.white.withOpacity(0.8),
+    height: 100,
+    width: 100,
+    color: greyColor.withOpacity(0.2),
     child: CircularProgressIndicator(
-      color: themeColor.withOpacity(0.2),
+      color: Colors.black.withOpacity(0.8),
     ),
   );
 }
