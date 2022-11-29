@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/providers/user_provider.dart';
@@ -148,8 +149,14 @@ class _PostCardState extends State<PostCard> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.45,
                   width: double.infinity,
-                  child: Image.network(
-                    widget.snap['postUrl'],
+                  child: CachedNetworkImage(
+                    imageUrl: widget.snap['postUrl'],
+                    errorWidget: (context, url, error) {
+                      return Image.asset(
+                        'assets/images/img_not_available.jpeg',
+                        fit: BoxFit.cover,
+                      );
+                    },
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -272,28 +279,31 @@ class _PostCardState extends State<PostCard> {
                     ),
                   ),
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('posts')
-                          .doc(widget.snap['postId'])
-                          .collection('comments')
-                          .snapshots(),
-                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot){
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Text(
-                            '0 Comment',
-                            style: TextStyle(color: secondaryColor, fontSize: 16),
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(widget.snap['postId'])
+                            .collection('comments')
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text(
+                              '0 Comment',
+                              style: TextStyle(
+                                  color: secondaryColor, fontSize: 13),
+                            );
+                          }
+                          return Text(
+                            '${snapshot.data!.docs.length} Comment',
+                            style:
+                                TextStyle(color: secondaryColor, fontSize: 13),
                           );
-                        }
-                        return Text(
-                          '${snapshot.data!.docs.length} Comment',
-                          style: TextStyle(color: secondaryColor, fontSize: 16),
-                        );
-                      },
-                    )
-
-                  ),
+                        },
+                      )),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 4),
