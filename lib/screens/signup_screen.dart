@@ -90,144 +90,148 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void navigatorLogin() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const LoginScreen()));
+        .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false,);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Spacer(
-                flex: 2,
-              ),
-              //svg image logo
-              SvgPicture.asset(
-                'assets/images/ic_instagram.svg',
-                color: primaryColor,
-                height: 64,
-              ),
-              const SizedBox(
-                height: 64,
-              ),
-              //circular avatar
-              Stack(
-                children: [
-                  _image != null
-                      ? CircleAvatar(
-                          radius: 64,
-                          backgroundImage: MemoryImage(_image!),
-                        )
-                      : const CircleAvatar(
-                          radius: 64,
-                          backgroundImage: NetworkImage(
-                              'https://haycafe.vn/wp-content/uploads/2021/11/Anh-avatar-facebook-chat-bua-hai-thuoc.jpg'),
-                        ),
-                  Positioned(
-                    bottom: -10,
-                    left: 90,
-                    child: IconButton(
-                      onPressed: selectImage,
-                      icon: const Icon(
-                        Icons.add_a_photo,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              //text field input username
-              TextFieldInput(
-                hintText: 'Enter your user name',
-                textInputType: TextInputType.text,
-                textEditingController: _userNameController,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              //text field input email
-              TextFieldInput(
-                hintText: 'Enter your email',
-                textInputType: TextInputType.emailAddress,
-                textEditingController: _emailController,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              //text field input password
-              TextFieldInput(
-                hintText: 'Enter your password',
-                textInputType: TextInputType.text,
-                textEditingController: _passController,
-                isPass: true,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFieldInput(
-                hintText: 'Enter your bio',
-                textInputType: TextInputType.text,
-                textEditingController: _bioController,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              //button login
-              InkWell(
-                onTap: signUpUser,
-                child: Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    color: blueColor,
-                  ),
-                  child: _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                            color: primaryColor,
-                          ),
-                        )
-                      : const Text('Sign Up'),
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.95,
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Spacer(
+                  flex: 2,
                 ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              const Spacer(
-                flex: 2,
-              ),
-              //transitioning to signing up
-              GestureDetector(
-                onTap: navigatorLogin,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                //svg image logo
+                SvgPicture.asset(
+                  'assets/images/ic_instagram.svg',
+                  color: primaryColor,
+                  height: 64,
+                ),
+                const SizedBox(
+                  height: 64,
+                ),
+                //circular avatar
+                Stack(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: const Text('Already have an account? '),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: const Text(
-                        'Log In',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    _image != null
+                        ? CircleAvatar(
+                            radius: 64,
+                            backgroundImage: MemoryImage(_image!),
+                          )
+                        : const CircleAvatar(
+                            radius: 64,
+                            backgroundImage: NetworkImage(
+                                'https://haycafe.vn/wp-content/uploads/2021/11/Anh-avatar-facebook-chat-bua-hai-thuoc.jpg'),
+                          ),
+                    Positioned(
+                      bottom: -10,
+                      left: 90,
+                      child: IconButton(
+                        onPressed: selectImage,
+                        icon: const Icon(
+                          Icons.add_a_photo,
+                        ),
                       ),
                     ),
                   ],
                 ),
-              )
-            ],
+                const SizedBox(
+                  height: 24,
+                ),
+                //text field input username
+                TextFieldInput(
+                  hintText: 'Enter your user name',
+                  textInputType: TextInputType.text,
+                  textEditingController: _userNameController,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                //text field input email
+                TextFieldInput(
+                  hintText: 'Enter your email',
+                  textInputType: TextInputType.emailAddress,
+                  textEditingController: _emailController,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                //text field input password
+                TextFieldInput(
+                  hintText: 'Enter your password',
+                  textInputType: TextInputType.text,
+                  textEditingController: _passController,
+                  isPass: true,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                TextFieldInput(
+                  hintText: 'Enter your bio',
+                  textInputType: TextInputType.text,
+                  textEditingController: _bioController,
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                //button login
+                InkWell(
+                  onTap: signUpUser,
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      color: blueColor,
+                    ),
+                    child: _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: primaryColor,
+                            ),
+                          )
+                        : const Text('Sign Up'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+
+                //transitioning to signing up
+                GestureDetector(
+                  onTap: navigatorLogin,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: const Text('Already have an account? '),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: const Text(
+                          'Log In',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(
+                  flex: 2,
+                ),
+              ],
+            ),
           ),
         ),
       ),

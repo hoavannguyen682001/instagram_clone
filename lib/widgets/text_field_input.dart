@@ -18,7 +18,8 @@ class TextFieldInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final inputBorder =
         OutlineInputBorder(borderSide: Divider.createBorderSide(context));
-    return TextField(
+    return TextFormField(
+      enableSuggestions: false,
       controller: textEditingController,
       decoration: InputDecoration(
         hintText: hintText,
