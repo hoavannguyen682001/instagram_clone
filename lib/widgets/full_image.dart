@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:photo_view/photo_view.dart';
 
-import '../screens/chat_screen.dart';
+import '../screens/chat/chat_screen.dart';
 
 class FullImageScreen extends StatelessWidget {
   final String url;

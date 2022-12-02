@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:instagram_clone/screens/chat_screen.dart';
-import 'package:instagram_clone/screens/profile_screen.dart';
+import 'package:instagram_clone/screens/chat/chat_screen.dart';
+import 'package:instagram_clone/screens/profile/profile_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 
-import '../models/user.dart' as model;
-import '../utils/utils.dart';
+import '../../models/user.dart' as model;
+import '../../utils/utils.dart';
 
 class MessageScreen extends StatefulWidget {
   String uid;

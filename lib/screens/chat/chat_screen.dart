@@ -12,8 +12,8 @@ import 'package:instagram_clone/widgets/full_image.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:intl/intl.dart';
 
-import '../resources/message_methods.dart';
-import '../utils/utils.dart';
+import '../../resources/message_methods.dart';
+import '../../utils/utils.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key, required this.arguments}) : super(key: key);
@@ -43,14 +43,11 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    focusNode.addListener(onFocusChange);
     readLocal();
     listScrollController.addListener(_scrollListener);
   }
-
-  static final customCache = CacheManager(
-    Config('chattingCache',
-        stalePeriod: Duration(days: 14), maxNrOfCacheObjects: 100),
-  );
+  
 
   _scrollListener() {
     if (!listScrollController.hasClients) return;
@@ -500,23 +497,24 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildSticker() {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              width: 0.5,
-              color: primaryColor,
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            width: 0.5,
+            color: primaryColor,
           ),
         ),
-        height: 100,
-        padding: EdgeInsets.all(5),
+      ),
+      height: 200,
+      padding: EdgeInsets.all(5),
+      child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
                   onPressed: () => onSendMessage('mimi1', TypeMessage.sticker),
@@ -548,7 +546,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
                   onPressed: () => onSendMessage('mimi4', TypeMessage.sticker),
@@ -580,7 +578,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
                   onPressed: () => onSendMessage('mimi7', TypeMessage.sticker),
