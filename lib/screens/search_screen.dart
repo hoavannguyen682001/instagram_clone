@@ -2,9 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:instagram_clone/screens/profile_screen.dart';
+import 'package:instagram_clone/screens/profile/post_screen_user.dart';
+import 'package:instagram_clone/screens/profile/profile_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/global_variables.dart';
+import 'package:instagram_clone/widgets/post_card.dart';
+
+import '../models/post.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -53,8 +57,7 @@ class _SearchScreenState extends State<SearchScreen> {
               future: FirebaseFirestore.instance
                   .collection('user')
                   .orderBy('username')
-                  .startAt([searchController.text])
-                  .endAt(
+                  .startAt([searchController.text]).endAt(
                       [searchController.text + '\uf8ff'])
                   // .where('username',
                   //     isGreaterThanOrEqualTo: searchController.text)
@@ -93,40 +96,49 @@ class _SearchScreenState extends State<SearchScreen> {
             )
           : Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FutureBuilder(
-                future: FirebaseFirestore.instance.collection('posts').get(),
-                builder: (context, snapshot) {
+              child: StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance.collection('posts').snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-                  return MasonryGridView.builder(
-                    gridDelegate:
-                        SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                screenWidth > webScreenSize ? 3 : 2),
-                    itemCount: (snapshot.data! as dynamic).docs.length,
-                    itemBuilder: (context, index) {
-                      return _ImageItem(context,
-                          (snapshot.data! as dynamic).docs[index]['postUrl']);
-                    },
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 6,
-                  );
+                    return MasonryGridView.builder(
+                      gridDelegate:
+                      SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount:
+                          screenWidth > webScreenSize ? 3 : 2),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        return _ImageItem(context, snapshot.data!.docs[index]);
+                      },
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 6,
+                    );
                 },
               ),
             ),
     );
   }
 
-  Widget _ImageItem(BuildContext context, String imageUrl) {
-    if (imageUrl != null) {
+  Widget _ImageItem(BuildContext context, DocumentSnapshot? snapshot) {
+    if (snapshot != null) {
+      // Post post = Post.fromSnap(snapshot);
       return Container(
-        child: Material(
-          child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            fit: BoxFit.cover,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PostScreenUser(
+                      uid: snapshot['uid'],
+                    )));
+          },
+          child: Material(
+            child: CachedNetworkImage(
+              imageUrl: snapshot['postUrl'],
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       );

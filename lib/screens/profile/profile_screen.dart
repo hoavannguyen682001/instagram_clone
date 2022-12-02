@@ -7,15 +7,15 @@ import 'package:instagram_clone/models/user.dart' as model;
 import 'package:instagram_clone/resources/auth_methods.dart';
 import 'package:instagram_clone/resources/firestore_methods.dart';
 import 'package:instagram_clone/screens/login_screen.dart';
+import 'package:instagram_clone/screens/profile/post_screen_user.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/utils.dart';
 import 'package:instagram_clone/widgets/follow_button.dart';
 
 
 class ProfileScreen extends StatefulWidget {
+  ProfileScreen({Key? key, required this.uid}) : super(key: key);
   final String uid;
-  const ProfileScreen({Key? key, required this.uid}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() {
     return _ProfileScreenState();
@@ -71,8 +71,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  // void unsetDataUid(){
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   widget.uid = null;
+  // }
+
+
   @override
   Widget build(BuildContext context) {
+    print('uid ${widget.uid}');
+    print('auth $auth');
     return isLoading
         ? const Center(
             child: CircularProgressIndicator(),
@@ -95,11 +105,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               .map(
                                 (e) => InkWell(
                                   onTap: () {
+                                    // unsetDataUid();
                                     AuthMethods().signOut();
-                                    Navigator.of(context).pushReplacement(
+                                    Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const LoginScreen()));
+                                                const LoginScreen()),
+                                          (Route<dynamic> route) => false,
+                                    );
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(16),
@@ -243,7 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 childAspectRatio: 1),
                         itemCount: (snapshot.data! as dynamic).docs.length,
                         itemBuilder: (context, index) {
-                          return _ImageItem(context, (snapshot.data! as dynamic).docs[index]['postUrl']);
+                          return _ImageItem(context, (snapshot.data! as dynamic).docs[index]);
 
                         },
                       );
@@ -278,13 +291,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _ImageItem(BuildContext context, String imageUrl){
-    if(imageUrl != null){
+  Widget _ImageItem(BuildContext context, DocumentSnapshot? snapshot){
+    if(snapshot != null){
       return Container(
-        child: Material(
-          child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            fit: BoxFit.cover,
+        child: InkWell(
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PostScreenUser(
+                  uid: snapshot['uid'],
+                )));
+          },
+          child: Material(
+            child: CachedNetworkImage(
+              imageUrl: snapshot['postUrl'],
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       );
